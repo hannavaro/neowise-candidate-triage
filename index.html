@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f3f5fa">
+  <meta name="theme-color" content="#f4f5f1">
   <title>Входящие заявки · Neowise</title>
   <style>
     :root {
       color-scheme: light;
-      --ink: #17213b;
-      --muted: #56627a;
-      --line: #dce2ee;
-      --accent: #503fbe;
-      --soft-accent: #eeebff;
-      font-family: "Segoe UI", system-ui, sans-serif;
+      --ink: #1c2822;
+      --muted: #53615a;
+      --line: #dce2da;
+      --accent: #245744;
+      --canvas: #f4f5f1;
+      font-family: "Aptos", "Segoe UI", system-ui, sans-serif;
       color: var(--ink);
-      background: #f3f5fa;
+      background: var(--canvas);
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -24,218 +24,238 @@
     button, textarea { font: inherit; }
     button { cursor: pointer; }
     button:disabled { cursor: default; }
-    :focus-visible { outline: 3px solid #7461e2; outline-offset: 3px; }
+    :focus-visible { outline: 2px solid #467b63; outline-offset: 3px; }
 
-    .wrap { width: min(68rem, calc(100% - 3rem)); margin-inline: auto; }
-    .masthead { background: #fff; border-bottom: 1px solid var(--line); }
-    .masthead .wrap { display: flex; align-items: center; min-height: 4.25rem; }
-    .brand { display: inline-flex; align-items: center; gap: .75rem; font-size: 1.125rem; font-weight: 750; letter-spacing: -.03em; }
+    .wrap { width: min(69rem, calc(100% - 4rem)); margin-inline: auto; }
+    .masthead { border-bottom: 1px solid var(--line); background: #fff; }
+    .masthead .wrap { display: flex; align-items: center; min-height: 3.625rem; }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: .625rem;
+      font-size: 1.1875rem;
+      font-weight: 700;
+      letter-spacing: -.045em;
+    }
     .brand-mark {
+      display: inline-grid;
+      grid-template-columns: repeat(2, 4px);
+      align-items: end;
+      gap: 3px;
+      height: 1rem;
+      transform: skewX(-20deg);
+    }
+    .brand-mark::before, .brand-mark::after { content: ""; background: var(--accent); }
+    .brand-mark::before { height: 65%; }
+    .brand-mark::after { height: 100%; }
+
+    main { padding-block: clamp(2rem, 5vw, 4rem) 3rem; }
+    h1, h2, h3, p, dl, dd { margin: 0; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.08; font-weight: 650; letter-spacing: -.045em; }
+    .intro p { margin-top: .75rem; color: var(--muted); font-size: 1.0625rem; line-height: 1.5; }
+
+    .workspace {
       display: grid;
-      place-items: center;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 10px;
-      color: white;
-      background: var(--accent);
-      font-size: .95rem;
-      font-weight: 800;
-    }
-
-    main { padding-block: 2.25rem 3rem; }
-    .intro {
-      position: relative;
-      overflow: hidden;
-      isolation: isolate;
-      padding: 2.5rem 2.75rem;
-      border-radius: 24px;
-      background: linear-gradient(115deg, #161f3e 25%, #292758 67%, #443783);
-      color: #fff;
-    }
-    .intro::after {
-      content: "";
-      position: absolute;
-      z-index: -1;
-      inset: 0;
-      background: repeating-radial-gradient(circle at 90% 105%, transparent 0 24px, #c8bcff28 25px 26px);
-      mask-image: linear-gradient(to right, transparent 54%, black);
-    }
-    h1, h2, h3, p { margin: 0; }
-    h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; font-weight: 750; letter-spacing: -.045em; }
-    .intro p { max-width: 34rem; margin-top: .75rem; color: #e2e4f3; line-height: 1.55; }
-
-    .workspace { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.125rem; margin-top: 1.125rem; }
-    .card {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      min-height: 23rem;
-      padding: 1.5rem;
+      grid-template-columns: minmax(0, 1.13fr) minmax(0, 1fr);
+      margin-top: 1.75rem;
       border: 1px solid var(--line);
-      border-radius: 20px;
+      border-radius: 9px;
       background: #fff;
-      box-shadow: 0 4px 14px #1e2c4d06;
     }
-    .card-heading { display: flex; align-items: center; justify-content: space-between; gap: .5rem 1rem; flex-wrap: wrap; min-height: 2.25rem; margin-bottom: 1rem; }
-    h2 { font-size: 1.25rem; line-height: 1.35; font-weight: 730; letter-spacing: -.025em; }
+    .panel { display: flex; flex-direction: column; min-width: 0; }
+    .panel + .panel { border-inline-start: 1px solid var(--line); }
+    .panel-heading {
+      display: flex;
+      align-items: center;
+      min-height: 3.375rem;
+      padding: .875rem 1.5rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-heading h2 { font-size: 1.0625rem; line-height: 1.35; font-weight: 650; }
+    .panel-body { flex: 1; padding: 1.25rem 1.5rem 1.5rem; }
+    .field-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .125rem 1rem;
+      margin-bottom: .5rem;
+    }
+    .field-heading label { font-size: .875rem; font-weight: 650; }
     .example {
-      padding: .375rem .7rem;
+      min-height: 2rem;
+      padding: .25rem 0;
       border: 0;
-      border-radius: 8px;
-      background: var(--soft-accent);
-      color: #43319e;
+      background: transparent;
+      color: var(--accent);
       font-size: .875rem;
-      font-weight: 650;
+      text-decoration: underline;
+      text-decoration-color: #90a99d;
+      text-underline-offset: .2em;
     }
-    .example:hover:not(:disabled) { background: #e4dfff; }
+    .example:hover:not(:disabled) { text-decoration-color: currentColor; }
     .example:disabled { opacity: .55; }
-    .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
     textarea {
       display: block;
-      flex: 1;
       width: 100%;
-      min-height: 11rem;
-      padding: 1rem;
+      min-height: 11.5rem;
+      padding: .875rem 1rem;
       resize: vertical;
-      border: 1px solid #cbd4e5;
-      border-radius: 12px;
+      border: 1px solid #cbd4ca;
+      border-radius: 6px;
       color: var(--ink);
-      background: #fafbfe;
+      background: #fff;
       line-height: 1.6;
     }
-    textarea::placeholder { color: #657087; }
-    textarea[aria-invalid="true"] { border-color: #b13845; }
-    .input-error { margin-top: .55rem; color: #a12636; font-size: .875rem; }
+    textarea::placeholder { color: #65716a; }
+    textarea[aria-invalid="true"] { border-color: #ad3a36; }
+    .input-error { margin-top: .5rem; color: #a02a27; font-size: .875rem; }
+    .panel-footer {
+      padding: .875rem 1.5rem;
+      border-top: 1px solid var(--line);
+      border-bottom-left-radius: 8px;
+      background: #fafbf8;
+    }
     .submit {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: .7rem;
-      align-self: flex-start;
-      min-height: 2.9rem;
-      margin-top: 1rem;
-      padding: .65rem 1.1rem;
+      min-width: 9.5rem;
+      min-height: 2.75rem;
+      padding: .5rem 1rem;
       border: 0;
-      border-radius: 10px;
+      border-radius: 6px;
       background: var(--accent);
       color: #fff;
       font-weight: 650;
     }
-    .submit:hover:not(:disabled) { background: #40319f; }
-    .submit:disabled { background: #6255b1; }
-    .submit-icon { font-size: 1.15rem; line-height: 1; }
+    .submit:hover:not(:disabled) { background: #183f31; }
+    .submit:active:not(:disabled) { background: #123427; }
+    .submit:disabled { background: #49685b; }
 
-    .result { display: flex; flex: 1; flex-direction: column; }
+    .panel-result { border-radius: 0 8px 8px 0; background: #fafbf8; }
+    .result { display: flex; flex-direction: column; }
     .status {
-      display: grid;
+      display: flex;
+      align-items: center;
       flex: 1;
-      place-content: center;
-      justify-items: center;
-      gap: .55rem;
-      min-height: 14rem;
-      padding: 1.35rem;
-      border: 1px dashed #cbd4e5;
-      border-radius: 12px;
-      background: #fafbfe;
-      text-align: center;
+      gap: .875rem;
+      min-height: 10rem;
+      padding: .875rem 0;
+      color: var(--muted);
     }
-    .status[data-state="manual"] { border: 1px solid #ebd7a9; background: #fffbf1; }
     .status-symbol {
       display: grid;
       place-items: center;
-      width: 3rem;
-      height: 3rem;
-      margin-bottom: .3rem;
-      border-radius: 13px;
-      background: var(--soft-accent);
-      color: var(--accent);
+      flex: 0 0 2rem;
+      height: 2rem;
+      border: 1px solid #d4ddd4;
+      border-radius: 5px;
+      color: #4b685a;
     }
     .status-symbol::before {
       content: "";
-      width: .95rem;
-      height: 1.2rem;
-      border: 1.5px solid currentColor;
-      border-radius: 3px;
-      background: linear-gradient(currentColor, currentColor) center 40% / 53% 1.5px no-repeat,
-                  linear-gradient(currentColor, currentColor) center 65% / 53% 1.5px no-repeat;
+      width: .7rem;
+      height: .875rem;
+      border: 1px solid currentColor;
+      border-radius: 2px;
+      background: linear-gradient(currentColor, currentColor) center 37% / 55% 1px no-repeat,
+                  linear-gradient(currentColor, currentColor) center 67% / 55% 1px no-repeat;
     }
     [data-state="pending"] .status-symbol::before {
-      width: 1.15rem;
-      height: 1.15rem;
-      border: 2px solid #c3baf3;
+      width: .875rem;
+      height: .875rem;
+      border: 1.5px solid #a9bcb0;
       border-top-color: currentColor;
       border-radius: 50%;
       background: none;
       animation: spin .75s linear infinite;
     }
-    [data-state="manual"] .status-symbol { color: #805211; background: #f8e8c4; }
+    .status[data-state="manual"] {
+      flex: 0 0 auto;
+      align-items: flex-start;
+      min-height: 0;
+      margin-top: .25rem;
+      padding: .875rem 1rem;
+      border-inline-start: 2px solid #a66d2d;
+      border-radius: 0 5px 5px 0;
+      color: #623c1e;
+      background: #f7efe2;
+    }
+    [data-state="manual"] .status-symbol { border-color: #e0ccaf; color: #80511e; }
     [data-state="manual"] .status-symbol::before {
       content: "!";
       width: auto;
       height: auto;
       border: 0;
       background: none;
-      font-size: 1.4rem;
-      font-weight: 750;
+      font-size: 1rem;
+      font-weight: 700;
     }
-    .status-title { font-weight: 700; }
-    .status-detail { max-width: 27ch; color: var(--muted); font-size: .9rem; line-height: 1.5; }
+    .status-title { font-size: .9375rem; font-weight: 650; line-height: 1.4; }
+    .status-detail { margin-top: .25rem; font-size: .875rem; line-height: 1.5; }
     .status-detail:empty { display: none; }
-    .topic-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .8rem; min-height: 2rem; }
-    .topic-label { color: var(--muted); font-size: .9rem; }
-    .topic { border-radius: 99px; padding: .3rem .7rem; background: var(--soft-accent); color: #43319e; font-size: .875rem; font-weight: 650; }
-    .draft { margin-top: 1rem; padding: 1rem; border: 1px solid var(--line); border-radius: 12px; background: #fafbfe; }
-    .draft h3 { margin-bottom: .5rem; font-size: .95rem; }
+    .topic-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; min-height: 2rem; }
+    .topic-label { color: var(--muted); font-size: .875rem; }
+    .topic { padding: .2rem .45rem; border-radius: 4px; background: #e8efe9; color: #254a3a; font-size: .875rem; font-weight: 650; }
+    .draft { margin-top: 1rem; padding-top: 1.125rem; border-top: 1px solid var(--line); }
+    .draft h3 { margin-bottom: .5rem; color: var(--muted); font-size: .875rem; font-weight: 650; }
     .draft p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
 
     @keyframes spin { to { transform: rotate(360deg); } }
-    @media (prefers-reduced-motion: reduce) { .status-symbol::before { animation: none !important; } }
+    @media (prefers-reduced-motion: reduce) { [data-state="pending"] .status-symbol::before { animation: none; } }
     @media (max-width: 46rem) {
-      .wrap { width: min(100% - 2rem, 38rem); }
-      main { padding-top: 1.25rem; }
-      .intro { padding: 1.55rem; border-radius: 19px; }
+      .wrap { width: min(38rem, calc(100% - 2rem)); }
+      .masthead .wrap { min-height: 3.25rem; }
       .workspace { grid-template-columns: minmax(0, 1fr); }
-      .card { min-height: auto; padding: 1.15rem; border-radius: 16px; }
-      .status { min-height: 11rem; }
+      .panel + .panel { border-inline-start: 0; border-top: 1px solid var(--line); }
+      .panel-result { border-radius: 0 0 8px 8px; }
+      .panel-footer { border-radius: 0; }
+      .panel-heading, .panel-body, .panel-footer { padding-inline: 1rem; }
+      .status { min-height: 5rem; }
+      textarea { min-height: 9.5rem; }
     }
-    @media (max-width: 26rem) { .submit { align-self: stretch; } }
+    @media (max-width: 26rem) { .submit { width: 100%; } }
   </style>
 </head>
 <body>
   <header class="masthead">
     <div class="wrap">
-      <div class="brand"><span class="brand-mark" aria-hidden="true">N</span>Neowise</div>
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Neowise</div>
     </div>
   </header>
   <main class="wrap">
     <div class="intro">
       <h1>Входящие заявки</h1>
-      <p>Вставьте сообщение клиента, чтобы получить тему заявки и черновик ответа.</p>
+      <p>Разберите обращение клиента и подготовьте ответ.</p>
     </div>
     <div class="workspace">
-      <form class="card" aria-labelledby="form-heading">
-        <div class="card-heading">
-          <h2 id="form-heading">Заявка клиента</h2>
-          <button class="example" id="example" type="button">Подставить пример</button>
+      <form class="panel" aria-labelledby="form-heading">
+        <div class="panel-heading"><h2 id="form-heading">Заявка клиента</h2></div>
+        <div class="panel-body">
+          <div class="field-heading">
+            <label for="message">Текст заявки</label>
+            <button class="example" id="example" type="button">Подставить пример</button>
+          </div>
+          <textarea id="message" rows="6" placeholder="Вставьте сообщение клиента" aria-describedby="input-error"></textarea>
+          <p class="input-error" id="input-error" role="alert" hidden>Введите текст заявки.</p>
         </div>
-        <label class="visually-hidden" for="message">Текст заявки</label>
-        <textarea id="message" rows="6" placeholder="Вставьте текст сообщения…" aria-describedby="input-error"></textarea>
-        <p class="input-error" id="input-error" role="alert" hidden>Введите текст заявки.</p>
-        <button class="submit" type="submit">
-          <span id="submit-label">Разобрать заявку</span>
-          <span class="submit-icon" aria-hidden="true">→</span>
-        </button>
+        <div class="panel-footer">
+          <button class="submit" type="submit">Разобрать заявку</button>
+        </div>
       </form>
-      <section class="card" aria-labelledby="result-heading">
-        <div class="card-heading"><h2 id="result-heading">Результат разбора</h2></div>
-        <div class="result" id="result" aria-live="polite" aria-atomic="true">
+      <section class="panel panel-result" aria-labelledby="result-heading">
+        <div class="panel-heading"><h2 id="result-heading">Результат разбора</h2></div>
+        <div class="panel-body result" id="result" aria-live="polite" aria-atomic="true">
           <div class="status" id="status" data-state="empty">
             <span class="status-symbol" aria-hidden="true"></span>
-            <p class="status-title" id="status-title">Заявка ещё не разобрана</p>
-            <p class="status-detail" id="status-detail"></p>
+            <div>
+              <p class="status-title" id="status-title">Заявка ещё не разобрана</p>
+              <p class="status-detail" id="status-detail"></p>
+            </div>
           </div>
           <div id="answer" hidden>
-            <div class="topic-row"><span class="topic-label">Тема заявки</span><span class="topic" id="topic"></span></div>
+            <dl class="topic-row"><dt class="topic-label">Тема заявки</dt><dd class="topic" id="topic"></dd></dl>
             <div class="draft"><h3>Черновик ответа</h3><p id="draft"></p></div>
           </div>
         </div>
@@ -247,7 +267,6 @@
     const message = document.querySelector("#message");
     const example = document.querySelector("#example");
     const button = form.querySelector('button[type="submit"]');
-    const submitLabel = document.querySelector("#submit-label");
     const inputError = document.querySelector("#input-error");
     const statusPanel = document.querySelector("#status");
     const statusTitle = document.querySelector("#status-title");
@@ -307,7 +326,7 @@
       button.disabled = true;
       example.disabled = true;
       message.readOnly = true;
-      submitLabel.textContent = "Разбираем…";
+      button.textContent = "Разбираем…";
       try {
         const reply = await fetch("/api/triage", {
           method: "POST",
@@ -332,7 +351,7 @@
         button.disabled = false;
         example.disabled = false;
         message.readOnly = false;
-        submitLabel.textContent = "Разобрать заявку";
+        button.textContent = "Разобрать заявку";
       }
     });
   </script>
